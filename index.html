@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karthik Chokkalingam — Network Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:            #101c26;
+    --panel:         #16273441;
+    --panel-solid:   #16273a;
+    --grid-line:     #24384a;
+    --accent:        #e8a33d;   /* amber status light */
+    --accent-2:      #5fb3b3;   /* schematic teal */
+    --text:          #e7eef2;
+    --text-muted:    #8ca3b5;
+    --ok:            #6fbf8b;
+    --warn:          #e8a33d;
+    --border:        #263b4d;
+    --radius:        6px;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --display: 'Space Grotesk', sans-serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:
+      linear-gradient(var(--bg), var(--bg)),
+      repeating-linear-gradient(0deg, transparent 0 39px, var(--grid-line) 39px 40px),
+      repeating-linear-gradient(90deg, transparent 0 39px, var(--grid-line) 39px 40px);
+    background-color:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:var(--accent-2);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+  }
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(16,28,38,0.9);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+  }
+  nav.wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 24px;
+  }
+  .prompt{
+    font-family:var(--mono);font-size:14px;color:var(--accent-2);
+    display:flex;align-items:center;gap:8px;
+  }
+  .prompt .cursor{
+    display:inline-block;width:8px;height:16px;background:var(--accent);
+    animation:blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+  .navlinks{display:flex;gap:22px;font-family:var(--mono);font-size:13px;}
+  .navlinks a{color:var(--text-muted);}
+  .navlinks a:hover{color:var(--accent);text-decoration:none;}
+  .navtoggle{display:none;background:none;border:1px solid var(--border);color:var(--text);
+    font-family:var(--mono);padding:6px 10px;border-radius:var(--radius);}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:72px 0 60px;}
+  .hero-grid{
+    display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;
+  }
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--accent);
+    display:flex;align-items:center;gap:8px;margin-bottom:18px;
+  }
+  .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok);
+    box-shadow:0 0 8px var(--ok);}
+  h1{
+    font-family:var(--display);font-weight:700;font-size:clamp(34px,5vw,52px);
+    line-height:1.08;letter-spacing:-0.01em;margin-bottom:20px;
+  }
+  h1 span{color:var(--accent-2);}
+  .hero p.lead{color:var(--text-muted);font-size:17px;max-width:480px;margin-bottom:30px;}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    font-family:var(--mono);font-size:13px;padding:12px 20px;border-radius:var(--radius);
+    border:1px solid var(--border);transition:all .15s ease;display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary{background:var(--accent);color:#101c26;border-color:var(--accent);font-weight:600;}
+  .btn-primary:hover{background:#f3b559;text-decoration:none;}
+  .btn-ghost{color:var(--text);}
+  .btn-ghost:hover{border-color:var(--accent-2);color:var(--accent-2);text-decoration:none;}
+
+  .status-line{
+    margin-top:28px;font-family:var(--mono);font-size:12.5px;color:var(--text-muted);
+    border-left:2px solid var(--ok);padding-left:12px;min-height:18px;
+  }
+  .status-line .val{color:var(--ok);}
+
+  /* topology diagram */
+  .topo-card{
+    border:1px solid var(--border);border-radius:8px;background:var(--panel-solid);
+    padding:18px;position:relative;overflow:hidden;
+  }
+  .topo-card svg{width:100%;height:auto;display:block;}
+  .topo-label{
+    position:absolute;top:14px;left:18px;font-family:var(--mono);font-size:11px;
+    color:var(--text-muted);letter-spacing:.05em;
+  }
+  .node-label{font-family:var(--mono);font-size:9.5px;fill:var(--text-muted);}
+  .node-circle{fill:var(--panel-solid);stroke:var(--accent-2);stroke-width:1.5;}
+  .node-circle.fw{stroke:var(--accent);}
+  .link-line{stroke:var(--border);stroke-width:1.5;fill:none;}
+  .packet{fill:var(--accent);}
+  .packet2{fill:var(--accent-2);}
+
+  @media (prefers-reduced-motion: reduce){
+    .packet, .packet2, .cursor{animation:none !important;}
+  }
+
+  /* ---------- SECTION SHARED ---------- */
+  section{padding:64px 0;border-top:1px solid var(--border);}
+  .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:34px;flex-wrap:wrap;}
+  .section-head h2{font-family:var(--display);font-size:26px;font-weight:600;}
+  .section-head .tag{
+    font-family:var(--mono);font-size:12px;color:var(--text-muted);
+    border:1px solid var(--border);padding:3px 9px;border-radius:20px;
+  }
+
+  /* ---------- ABOUT (terminal window) ---------- */
+  .terminal{
+    border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--panel-solid);
+  }
+  .term-bar{
+    display:flex;align-items:center;gap:8px;padding:10px 14px;
+    background:#1c2e3d;border-bottom:1px solid var(--border);
+  }
+  .dot{width:10px;height:10px;border-radius:50%;}
+  .dot.red{background:#e2685f;} .dot.amber{background:var(--accent);} .dot.green{background:var(--ok);}
+  .term-title{font-family:var(--mono);font-size:12px;color:var(--text-muted);margin-left:8px;}
+  .term-body{padding:22px 24px;font-family:var(--mono);font-size:14px;color:var(--text-muted);}
+  .term-body .cmd{color:var(--accent-2);}
+  .term-body p{margin-top:14px;color:var(--text);font-family:var(--sans);font-size:15px;}
+
+  /* ---------- SKILLS (routing table) ---------- */
+  table.route-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13.5px;}
+  table.route-table th{
+    text-align:left;color:var(--text-muted);font-weight:500;padding:10px 12px;
+    border-bottom:1px solid var(--border);font-size:11.5px;letter-spacing:.05em;
+  }
+  table.route-table td{padding:14px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  table.route-table tr:hover td{background:#16273a;}
+  .signal{display:flex;gap:3px;}
+  .bar{width:6px;height:14px;background:var(--border);border-radius:1px;}
+  .bar.on{background:var(--accent-2);}
+
+  /* ---------- EXPERIENCE (log entries) ---------- */
+  .log{border-left:2px solid var(--border);margin-left:6px;}
+  .log-entry{position:relative;padding:4px 0 30px 26px;}
+  .log-entry::before{
+    content:"";position:absolute;left:-6.5px;top:6px;width:11px;height:11px;
+    border-radius:50%;background:var(--bg);border:2px solid var(--accent-2);
+  }
+  .log-entry .ts{font-family:var(--mono);font-size:12px;color:var(--accent-2);}
+  .log-entry h3{font-family:var(--display);font-size:18px;margin:6px 0 4px;font-weight:600;}
+  .log-entry .role-org{color:var(--text-muted);font-size:14px;margin-bottom:8px;}
+  .log-entry ul{padding-left:18px;color:var(--text-muted);font-size:14.5px;}
+  .log-entry li{margin-bottom:4px;}
+
+  /* ---------- PROJECTS (rack units) ---------- */
+  .rack{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;}
+  .unit{
+    border:1px solid var(--border);border-radius:8px;background:var(--panel-solid);
+    padding:20px;display:flex;flex-direction:column;gap:10px;
+  }
+  .unit-top{display:flex;justify-content:space-between;align-items:flex-start;}
+  .unit h3{font-family:var(--display);font-size:17px;font-weight:600;}
+  .led{width:8px;height:8px;border-radius:50%;background:var(--ok);margin-top:6px;flex-shrink:0;}
+  .unit p{color:var(--text-muted);font-size:14px;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+  .chip{
+    font-family:var(--mono);font-size:11px;color:var(--accent-2);
+    border:1px solid var(--border);padding:3px 8px;border-radius:4px;
+  }
+  .unit a.link{font-family:var(--mono);font-size:12.5px;margin-top:auto;}
+
+  /* ---------- CONTACT ---------- */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+  .config-block{
+    font-family:var(--mono);font-size:14px;background:var(--panel-solid);
+    border:1px solid var(--border);border-radius:8px;padding:22px;color:var(--text-muted);
+  }
+  .config-block .k{color:var(--accent-2);}
+  .config-block .v{color:var(--text);}
+  .config-block div{margin-bottom:10px;}
+
+  form.contact-form{display:flex;flex-direction:column;gap:14px;}
+  form.contact-form label{font-family:var(--mono);font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;}
+  form.contact-form input, form.contact-form textarea{
+    width:100%;background:var(--panel-solid);border:1px solid var(--border);border-radius:var(--radius);
+    color:var(--text);padding:10px 12px;font-family:var(--sans);font-size:14px;
+  }
+  form.contact-form input:focus, form.contact-form textarea:focus{border-color:var(--accent-2);}
+  form.contact-form button{align-self:flex-start;cursor:pointer;}
+
+  footer{padding:32px 0 50px;text-align:center;color:var(--text-muted);font-family:var(--mono);font-size:12px;}
+
+  @media (max-width:820px){
+    .hero-grid{grid-template-columns:1fr;}
+    .contact-grid{grid-template-columns:1fr;}
+    .navlinks{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <div class="prompt">jordan@netops<span style="color:var(--text-muted)">:~$</span><span class="cursor"></span></div>
+    <div class="navlinks">
+      <a href="#about">about</a>
+      <a href="#skills">skills</a>
+      <a href="#experience">experience</a>
+      <a href="#projects">projects</a>
+      <a href="#contact">contact</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" style="border-top:none;">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">LINK STATE: UP · 99.98% UPTIME</div>
+        <h1>Keeping packets<br><span>moving, secure,</span><br>and on time.</h1>
+        <p class="lead">Senior Network Engineer specializing in enterprise routing, firewall architecture, and zero-downtime migrations. 9 years designing networks that don't page anyone at 3am.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#" onclick="alert('Add your resume file to the project and link it here.'); return false;">↓ Download résumé</a>
+          <a class="btn btn-ghost" href="#contact">Get in touch</a>
+        </div>
+        <div class="status-line" id="pingLine">PING 10.0.4.1: waiting for reply…</div>
+      </div>
+
+      <div class="topo-card">
+        <span class="topo-label">// live topology (demo)</span>
+        <svg viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" aria-label="Diagram of a small office network topology">
+          <defs>
+            <path id="pathA" d="M70,300 L190,280 L260,190 L300,110 L420,60" />
+            <path id="pathB" d="M400,300 L260,190" />
+          </defs>
+
+          <path class="link-line" d="M70,300 L190,280" />
+          <path class="link-line" d="M190,280 L260,190" />
+          <path class="link-line" d="M260,190 L300,110" />
+          <path class="link-line" d="M300,110 L420,60" />
+          <path class="link-line" d="M400,300 L260,190" />
+
+          <circle class="packet" r="4"><animateMotion dur="3.2s" repeatCount="indefinite" rotate="auto"><mpath href="#pathA"/></animateMotion></circle>
+          <circle class="packet2" r="4"><animateMotion dur="2.4s" repeatCount="indefinite" rotate="auto"><mpath href="#pathB"/></animateMotion></circle>
+
+          <g>
+            <circle class="node-circle" cx="70" cy="300" r="20"/>
+            <text class="node-label" x="70" y="332" text-anchor="middle">CLIENT LAN</text>
+          </g>
+          <g>
+            <circle class="node-circle" cx="190" cy="280" r="20"/>
+            <text class="node-label" x="190" y="312" text-anchor="middle">SWITCH</text>
+          </g>
+          <g>
+            <circle class="node-circle fw" cx="260" cy="190" r="22"/>
+            <text class="node-label" x="260" y="224" text-anchor="middle">FIREWALL</text>
+          </g>
+          <g>
+            <circle class="node-circle" cx="300" cy="110" r="20"/>
+            <text class="node-label" x="300" y="142" text-anchor="middle">ROUTER</text>
+          </g>
+          <g>
+            <circle class="node-circle" cx="420" cy="60" r="22"/>
+            <text class="node-label" x="420" y="94" text-anchor="middle">INTERNET</text>
+          </g>
+          <g>
+            <circle class="node-circle" cx="400" cy="300" r="20"/>
+            <text class="node-label" x="400" y="332" text-anchor="middle">SERVER</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head"><h2>About</h2><span class="tag">whoami</span></div>
+      <div class="terminal">
+        <div class="term-bar">
+          <span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span>
+          <span class="term-title">about.txt</span>
+        </div>
+        <div class="term-body">
+          <span class="cmd">$</span> cat about.txt
+          <p>I'm Karthik Chokkalingam, a network engineer based in Austin, TX, with 9 years building and hardening networks for healthcare and fintech companies. I design for the failure case first — redundant paths, tested failover, and documentation someone else can actually follow at 2am. Certified in CCNP Enterprise and currently working through my CCIE lab. Off the clock, I homelab with a rack of retired enterprise gear and write about routing protocols nobody asked me to explain.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="wrap">
+      <div class="section-head"><h2>Skills</h2><span class="tag">show skills</span></div>
+      <table class="route-table">
+        <thead>
+          <tr><th>Domain</th><th>Tools / Protocols</th><th>Proficiency</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Routing &amp; Switching</td>
+            <td>BGP, OSPF, EIGRP, VLANs, STP/RSTP</td>
+            <td><div class="signal"><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div></div></td>
+          </tr>
+          <tr>
+            <td>Security</td>
+            <td>Palo Alto, Fortinet, IPSec VPN, Zero Trust</td>
+            <td><div class="signal"><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div><div class="bar"></div></div></td>
+          </tr>
+          <tr>
+            <td>Automation</td>
+            <td>Python, Ansible, Terraform, NAPALM</td>
+            <td><div class="signal"><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div><div class="bar"></div><div class="bar"></div></div></td>
+          </tr>
+          <tr>
+            <td>Cloud Networking</td>
+            <td>AWS VPC, Transit Gateway, Azure vWAN</td>
+            <td><div class="signal"><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div><div class="bar"></div><div class="bar"></div></div></td>
+          </tr>
+          <tr>
+            <td>Monitoring</td>
+            <td>SolarWinds, PRTG, Grafana, Zabbix</td>
+            <td><div class="signal"><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div><div class="bar"></div></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="wrap">
+      <div class="section-head"><h2>Experience</h2><span class="tag">tail -f uptime.log</span></div>
+      <div class="log">
+        <div class="log-entry">
+          <div class="ts">2022 — present</div>
+          <h3>Senior Network Engineer</h3>
+          <div class="role-org">Meridian Health Systems · Austin, TX</div>
+          <ul>
+            <li>Led migration of 40+ site WAN from MPLS to SD-WAN, cutting circuit costs 34%</li>
+            <li>Redesigned firewall policy across 3 data centers, reducing rule count by half</li>
+            <li>Built Python/Ansible pipeline for automated config backups and drift detection</li>
+          </ul>
+        </div>
+        <div class="log-entry">
+          <div class="ts">2019 — 2022</div>
+          <h3>Network Engineer II</h3>
+          <div class="role-org">Cascade Financial Group · Denver, CO</div>
+          <ul>
+            <li>Owned BGP peering and route policy for dual-ISP edge, zero unplanned outages</li>
+            <li>Implemented 802.1X network access control across 12 branch offices</li>
+          </ul>
+        </div>
+        <div class="log-entry">
+          <div class="ts">2016 — 2019</div>
+          <h3>Network Administrator</h3>
+          <div class="role-org">Fairview Logistics · Denver, CO</div>
+          <ul>
+            <li>Managed day-to-day switch/router operations for a 600-user environment</li>
+            <li>Migrated legacy voice infrastructure to VoIP, cutting telecom spend 22%</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="wrap">
+      <div class="section-head"><h2>Projects</h2><span class="tag">ls ~/projects</span></div>
+      <div class="rack">
+        <div class="unit">
+          <div class="unit-top"><h3>Config Drift Watcher</h3><span class="led"></span></div>
+          <p>Python service polling network device configs nightly and diffing against a known-good baseline, with Slack alerts on drift.</p>
+          <div class="chips"><span class="chip">Python</span><span class="chip">NAPALM</span><span class="chip">Slack API</span></div>
+          <a class="link" href="#">→ view repo</a>
+        </div>
+        <div class="unit">
+          <div class="unit-top"><h3>Homelab SD-WAN</h3><span class="led"></span></div>
+          <p>Self-hosted SD-WAN across 3 physical sites using retired enterprise routers, with automated failover testing.</p>
+          <div class="chips"><span class="chip">pfSense</span><span class="chip">WireGuard</span><span class="chip">BGP</span></div>
+          <a class="link" href="#">→ view repo</a>
+        </div>
+        <div class="unit">
+          <div class="unit-top"><h3>Subnet Planner CLI</h3><span class="led"></span></div>
+          <p>Command-line tool that takes a CIDR block and required host counts, and outputs an optimal VLSM subnetting plan.</p>
+          <div class="chips"><span class="chip">Python</span><span class="chip">Click</span></div>
+          <a class="link" href="#">→ view repo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="wrap contact-grid">
+      <div>
+        <div class="section-head"><h2>Contact</h2><span class="tag">cat contact.conf</span></div>
+        <div class="config-block">
+          <div><span class="k">email</span> = <span class="v">jordan.ellis@example.com</span></div>
+          <div><span class="k">phone</span> = <span class="v">(512) 555-0147</span></div>
+          <div><span class="k">location</span> = <span class="v">Austin, TX (open to remote)</span></div>
+          <div><span class="k">linkedin</span> = <span class="v"><a href="#">/in/jordan-ellis</a></span></div>
+          <div><span class="k">github</span> = <span class="v"><a href="#">/jellis-net</a></span></div>
+        </div>
+      </div>
+      <form class="contact-form" action="mailto:jordan.ellis@example.com" method="post" enctype="text/plain">
+        <div>
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" required>
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required>
+        </div>
+        <div>
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="4" required></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">Send message</button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 Karthik Chokkalingam · 
+</footer>
+
+<script>
+  // Rotating status line, purely decorative
+  const lines = [
+    "PING 10.0.4.1: 64 bytes, time=1.2ms, ttl=64",
+    "show ip bgp summary: 4 neighbors, all Established",
+    "interface Gi0/1: up, up, 1.2 Gbps",
+    "traceroute 8.8.8.8: 6 hops, 14ms avg"
+  ];
+  let i = 0;
+  const el = document.getElementById('pingLine');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(el && !reduceMotion){
+    setInterval(() => {
+      i = (i + 1) % lines.length;
+      el.textContent = lines[i];
+    }, 3200);
+  } else if (el) {
+    el.textContent = lines[0];
+  }
+</script>
+
+</body>
+</html>
